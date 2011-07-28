@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 import xml.dom.minidom, urllib2
 
 def main():
@@ -10,27 +12,34 @@ def main():
     dom = xml.dom.minidom.parseString(contents)
     mapit = []
     count = 0
-    print "CREATE TABLE default_passwords ("
+    print "drop table android_metadata;"
+    print "drop table default_passwords;"
+    print "CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US');"
+    print "INSERT INTO android_metadata VALUES ('en_US');"
+    print "CREATE TABLE default_passwords (_id integer primary key autoincrement, "
     for row in dom.getElementsByTagName('tr'):
         if not count:
             for itm in row.getElementsByTagName('td'):
-                mapit.append("`%s`" % itm.lastChild.lastChild.data)
+                mapit.append("`%s`" % itm.lastChild.lastChild.data.replace(' ', '_'))
             print ",".join(["%s varchar(64)" % it for it in mapit])
             print "); "
             count += 1
             continue
-        print "INSERT INTO default_passwords ("
-        print ",".join(mapit)
-        print ") VALUES "
-        tmpRow = []
-        print "("
-        for itm in row.getElementsByTagName('td'):
-            if not itm.lastChild:
-                tmpRow.append("NULL")
-                continue
-            tmpRow.append('"%s"' % itm.lastChild.data)
-        print ",".join(tmpRow)
-        print ");"
+        try:
+            ins  = "INSERT INTO default_passwords ("
+            ins += ",".join(mapit)
+            ins += ") VALUES ("
+            tmpRow = []
+            for itm in row.getElementsByTagName('td'):
+                if not itm.lastChild:
+                    tmpRow.append("NULL")
+                    continue
+                tmpRow.append('"%s"' % itm.lastChild.data)
+            ins += ",".join(tmpRow)
+            ins += ");"
+            print ins
+        except Exception, inst:
+            pass
     print ";"
 
 if __name__ == "__main__":
