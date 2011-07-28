@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DefaultPasswords</string>
+    <string name="no_vendors">There are no Vendors currently installed</string>
+    <string name="vendor">Vendor:</string>
+    <string name="model">Model:</string>
+    <string name="version">Version:</string>
+    <string name="access_type">Access Type:</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="priv">Privileges:</string>
+    <string name="notes">Notes:</string>
+</resources>
